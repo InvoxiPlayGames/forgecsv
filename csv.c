@@ -2,6 +2,7 @@
  * This code is licensed under MIT license (see LICENSE.txt for details) */
 
 // Modified 2026-05-14 by Emma for forgecsv to remove escape (\) character handling.
+// Modified 2026-05-15 by Emma for forgecsv to fix building on macOS.
 
 #include <stddef.h>
 #include <stdint.h>
@@ -58,7 +59,7 @@ struct CsvHandle_
     size_t quotes;
     void* auxbuf;
     
-#if defined ( __unix__ )
+#if defined ( __unix__ ) || defined ( __APPLE__ )
     int fh;
 #elif defined ( _WIN32 )
     HANDLE fh;
@@ -85,7 +86,7 @@ CsvHandle CsvOpen(const char* filename)
 /* thin platform dependent layer so we can use file mapping
  * with winapi and oses following posix specs.
  */
-#ifdef __unix__
+#if defined ( __unix__ ) || defined ( __APPLE__ )
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>

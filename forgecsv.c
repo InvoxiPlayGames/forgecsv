@@ -221,11 +221,10 @@ uint32_t add_string_to_table(const char *string) {
 
 #define MAX_COLS 16
 int txtrow_to_binrow(CsvHandle csv, char *row, FILE *bin) {
-#ifndef __APPLE__
     int num_cols = 0;
     uint32_t cols[MAX_COLS] = {0}; // max 16 columns isn't great, but fuck it
     const char *col = NULL;
-    while (col = CsvReadNextCol(row, csv)) {
+    while ((col = CsvReadNextCol(row, csv))) {
         cols[num_cols] = add_string_to_table(col);
         if (cols[num_cols] == 0xFFFFFFFF) {
             fprintf(stderr, "%s: failed to add string to table!\n", __func__);
@@ -241,15 +240,9 @@ int txtrow_to_binrow(CsvHandle csv, char *row, FILE *bin) {
     fwrite(&num_cols, sizeof(int), 1, bin);
     fwrite(cols, sizeof(uint32_t), num_cols, bin);
     return 0;
-#else
-    // TODO(Emma): csv.c doesn't work on macOS
-    fprintf(stderr, "%s: function not implemented on this platform.\n", __func__);
-    return -1;
-#endif
 }
 
 int csv_to_bincsv(const char *csv_file, const char *bincsv_file) {
-#ifndef __APPLE__
     int r = 0;
     // This sucks - we read the CSV in its entirety twice to get the size of symbol table,
     //  and number of rows, and then to actually insert those entries to the table.
@@ -261,10 +254,10 @@ int csv_to_bincsv(const char *csv_file, const char *bincsv_file) {
         fprintf(stderr, "%s: failed to open csv file from '%s'.\n", __func__, csv_file);
         return -1;
     }
-    while (row = CsvReadNextRow(csv)) {
+    while ((row = CsvReadNextRow(csv))) {
         const char *col = NULL;
         num_rows++;
-        while (col = CsvReadNextCol(row, csv))
+        while ((col = CsvReadNextCol(row, csv)))
             str_table_size += strlen(col) + 1;
     }
     CsvClose(csv);
@@ -313,8 +306,7 @@ int csv_to_bincsv(const char *csv_file, const char *bincsv_file) {
         current_string_table = NULL;
         return -1;
     }
-    while (row = CsvReadNextRow(csv)) {
-        // TODO(Emma): properly check for errors
+    while ((row = CsvReadNextRow(csv))) {
         if (txtrow_to_binrow(csv, row, bincsv) < 0) {
             fprintf(stderr, "%s: failed on row %i ('%s')\n", __func__, num_rows_done, row);
             CsvClose(csv);
@@ -347,20 +339,12 @@ int csv_to_bincsv(const char *csv_file, const char *bincsv_file) {
     fclose(bincsv);
     current_string_table = NULL;
     return 0;
-#else
-    // TODO(Emma): csv.c doesn't work on macOS
-    fprintf(stderr, "%s: function not implemented on this platform.\n", __func__);
-    return -1;
-#endif
 }
 
 int print_usage(const char *filename) {
     printf("usage:\n");
     printf("  %s bin2csv /path/to/input.csv[_xb1|_ps4|_pc] /path/to/output.csv\n", filename);
-#ifndef __APPLE__
-    // TODO(Emma): csv.c doesn't work on macOS
     printf("  %s csv2bin /path/to/input.csv /path/to/output.csv[_xb1|_ps4|_pc]\n", filename);
-#endif
     return -1;
 }
 

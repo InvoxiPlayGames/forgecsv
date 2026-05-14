@@ -5,12 +5,10 @@ usage:
   ./forgecsv bin2csv /path/to/input.csv[_xb1|_ps4|_pc] /path/to/output.csv
   ./forgecsv csv2bin /path/to/input.csv /path/to/output.csv[_xb1|_ps4|_pc]
 
-compiling:
+compiling (Linux, macOS):
   cc forgecsv.c csv.c -o forgecsv
-
-platform notes:
-  - requires Mingw64 on Windows
-  - csv.c (thus re-encoding) does not work on macOS
+compiling (Windows/Mingw64):
+  cc -D_WIN32_WINNT=0x0603 forgecsv.c csv.c -o forgecsv.exe
 
 licensed under MIT (see LICENSE.txt)
 
