@@ -3,7 +3,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+// TODO(Emma): csv.c doesn't work on macOS
+#ifndef __APPLE__
 #include "csv.h"
+#endif
 
 #define DEFAULT_SEPERATOR ','
 

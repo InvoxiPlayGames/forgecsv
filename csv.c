@@ -10,6 +10,7 @@
 /* Windows specific */
 #ifdef _WIN32
 #include <Windows.h>
+#include <Memoryapi.h>
 typedef unsigned long long file_off_t;
 #else
 #include <sys/types.h>
