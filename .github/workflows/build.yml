@@ -51,7 +51,7 @@ jobs:
         install: mingw-w64-x86_64-clang
 
     - name: Compile
-      run: cc forgecsv.c csv.c -o forgecsv.exe
+      run: cc -D_WIN32_WINNT=0x0603 forgecsv.c csv.c -o forgecsv.exe
 
     - name: Upload
       uses: actions/upload-artifact@v7

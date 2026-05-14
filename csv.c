@@ -1,6 +1,8 @@
 /* (c) 2019 Jan Doczy
  * This code is licensed under MIT license (see LICENSE.txt for details) */
 
+// Modified 2026-05-14 by Emma for forgecsv to remove escape (\) character handling.
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -468,8 +470,9 @@ const char* CsvReadNextCol(char* row, CsvHandle handle)
         int dq = 0;
         
         /* skip escape */
-        if (*p == handle->escape && p[1])
-            p++;
+        // EDITED(Emma): we don't want handling of escape characters
+        //if (*p == handle->escape && p[1])
+        //    p++;
 
         /* skip double-quote */
         if (*p == handle->quote && p[1] == handle->quote)
